@@ -1,0 +1,1 @@
+Sample application to demonstrate usage of Keda with Apache Kafka 
