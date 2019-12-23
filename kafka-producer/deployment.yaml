@@ -15,11 +15,11 @@ spec:
         app: kafka-producer
     spec:
       containers:
-      - name: kafka-producer
-        image: keda-example/kafka-producer
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 8090
+        - name: kafka-producer
+          image: keda-example/kafka-producer
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8090
 ---
 apiVersion: v1
 kind: Service
@@ -30,9 +30,9 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 8090
-    targetPort: 8090
-    protocol: TCP
-    name: http
+    - port: 8090
+      targetPort: 8090
+      protocol: TCP
+      name: http
   selector:
     app: kafka-producer
