@@ -12,6 +12,8 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Properties;
 
 public class ConsumerVerticle extends AbstractVerticle {
@@ -46,8 +48,9 @@ public class ConsumerVerticle extends AbstractVerticle {
             LOGGER.info("Processing: key={}, value={}, partition={}, offset={}", record.key(), record.value(), record.partition(), record.offset());
             Order order = Json.decodeValue(record.value(), Order.class);
             order.setStatus(OrderStatus.SHIPPED);
-            LOGGER.info("Order processed: id={}, price={}", order.getId(), order.getPrice());
+            order.setProcessedTime(Instant.now());
+            //TODO: Add code to simulate a delay.
+            LOGGER.info("Order processed: id={}, price={}, timeTaken={}", order.getId(), order.getPrice(), Duration.between(order.getCreatedTime(), order.getProcessedTime()).toMillis());
         });
     }
-
 }

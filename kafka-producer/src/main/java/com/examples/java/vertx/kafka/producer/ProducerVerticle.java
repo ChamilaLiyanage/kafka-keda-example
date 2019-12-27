@@ -4,6 +4,7 @@ import com.examples.java.vertx.kafka.common.Constants;
 import com.examples.java.vertx.kafka.common.Order;
 import com.examples.java.vertx.kafka.common.OrderStatus;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -18,9 +19,9 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.util.Properties;
 import java.util.Random;
-import java.util.UUID;
 
 
 public class ProducerVerticle extends AbstractVerticle {
@@ -29,7 +30,7 @@ public class ProducerVerticle extends AbstractVerticle {
 
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
-        vertx.deployVerticle(new ProducerVerticle());
+        vertx.deployVerticle(new ProducerVerticle(), new DeploymentOptions().setWorker(true));
     }
 
     @Override
@@ -53,9 +54,15 @@ public class ProducerVerticle extends AbstractVerticle {
 
             for (int i = 0; i < loopMax; i++) {
                 Random random = new Random();
-                Order order = new Order(UUID.randomUUID().toString(), OrderStatus.NEW, random.nextDouble() * 1000, random.nextInt(100));
+                Order order = new Order(String.valueOf(i), OrderStatus.NEW, random.nextDouble() * 1000, random.nextInt(100), Instant.now(), null);
                 JsonObject orderJson = JsonObject.mapFrom(order);
-                KafkaProducerRecord<String, JsonObject> record = KafkaProducerRecord.create(Constants.KAFKA_ORDERS_TOPIC, order.getId(), orderJson, 0);
+                orderList.add(orderJson);
+            }
+
+            for (Object order : orderList) {
+                JsonObject orderJson = JsonObject.mapFrom(order);
+
+                KafkaProducerRecord<String, JsonObject> record = KafkaProducerRecord.create(Constants.KAFKA_ORDERS_TOPIC, orderJson.getString("id"), orderJson, 0);
                 producer.write(record, done -> {
                     if (done.succeeded()) {
                         RecordMetadata recordMetadata = done.result();
@@ -65,9 +72,8 @@ public class ProducerVerticle extends AbstractVerticle {
                         Throwable t = done.cause();
                         logger.error("Error sent to topic: {}", t.getMessage());
                     }
-                    orderList.add(orderJson);
                 });
-                orderList.add(orderJson);
+
             }
             rc.response().end(orderList.encodePrettily());
         });

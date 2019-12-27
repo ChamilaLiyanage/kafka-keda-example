@@ -1,17 +1,42 @@
 package com.examples.java.vertx.kafka.common;
 
+import java.time.Instant;
+
 public class Order {
 
     private String id;
     private OrderStatus status;
     private double price;
     private int quantity;
+    private Instant createdTime;
+    private Instant processedTime;
 
-    public Order(String id, OrderStatus status, double price, int quantity) {
+    public Order() {
+    }
+
+    public Order(String id, OrderStatus status, double price, int quantity, Instant createdTime, Instant processedTime) {
         this.id = id;
         this.status = status;
         this.price = price;
         this.quantity = quantity;
+        this.createdTime = createdTime;
+        this.processedTime = processedTime;
+    }
+
+    public Instant getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Instant createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Instant getProcessedTime() {
+        return processedTime;
+    }
+
+    public void setProcessedTime(Instant processedTime) {
+        this.processedTime = processedTime;
     }
 
     public String getId() {

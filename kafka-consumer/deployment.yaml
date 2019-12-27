@@ -16,5 +16,10 @@ spec:
     spec:
       containers:
         - name: kafka-consumer
-          image: keda-example/kafka-consumer
+          image: kafka-consumer
           imagePullPolicy: Never
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "192.168.1.11:9092"
+            - name: KAFKA_ORDERS_TOPIC
+              value: "test"

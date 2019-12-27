@@ -16,10 +16,15 @@ spec:
     spec:
       containers:
         - name: kafka-producer
-          image: keda-example/kafka-producer
+          image: kafka-producer
           imagePullPolicy: Never
           ports:
             - containerPort: 8090
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "192.168.1.11:9092"
+            - name: KAFKA_ORDERS_TOPIC
+              value: "test"
 ---
 apiVersion: v1
 kind: Service
@@ -32,6 +37,7 @@ spec:
   ports:
     - port: 8090
       targetPort: 8090
+      nodePort: 32000
       protocol: TCP
       name: http
   selector:

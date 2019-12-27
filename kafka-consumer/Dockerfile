@@ -1,16 +1,5 @@
 # Extend vert.x image
 FROM vertx/vertx3
-
-ENV VERTICLE_NAME com.examples.java.vertx.kafka.consumer.ConsumerVerticle
-ENV VERTICLE_FILE target/kafka-consumer-1.0-SNAPSHOT-shaded.jar
-
-# Set the location of the verticles
-ENV VERTICLE_HOME /usr/verticles
-
-# Copy your verticle to the container
-COPY $VERTICLE_FILE $VERTICLE_HOME/
-
-# Launch the verticle
-WORKDIR $VERTICLE_HOME
-ENTRYPOINT ["sh", "-c"]
-CMD ["exec vertx run $VERTICLE_NAME -cp $VERTICLE_HOME/*"]
+ENV JAVA_APP_DIR=/deployments
+COPY target/kafka-consumer-1.0-SNAPSHOT-shaded.jar /deployments/
+ENTRYPOINT ["sh", "-c", "java -jar /deployments/kafka-consumer-1.0-SNAPSHOT-shaded.jar"]
