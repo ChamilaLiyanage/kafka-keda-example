@@ -1,0 +1,19 @@
+apiVersion: keda.k8s.io/v1alpha1
+kind: ScaledObject
+metadata:
+  name: kafka-scaledobject
+  namespace: default
+  labels:
+    deploymentName: kafka-consumer-deployment
+spec:
+  scaleTargetRef:
+    deploymentName: kafka-consumer-deployment
+  pollingInterval: 5
+  triggers:
+  - type: kafka
+    metadata:
+      # Required
+      brokerList: 192.168.1.11:9092
+      consumerGroup: order-shipper       # Make sure that this consumer group name is the same one as the one that is consuming topics
+      topic: test
+      lagThreshold: "10"
