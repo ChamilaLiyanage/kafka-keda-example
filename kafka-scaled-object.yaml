@@ -4,10 +4,10 @@ metadata:
   name: kafka-scaledobject
   namespace: default
   labels:
-    deploymentName: kafka-consumer-deployment
+    deploymentName: kafka-consumer-deployment # Required Name of the deployment we want to scale.
 spec:
   scaleTargetRef:
-    deploymentName: kafka-consumer-deployment
+    deploymentName: kafka-consumer-deployment # Required Name of the deployment we want to scale.
   pollingInterval: 5
   minReplicaCount: 1   #Optional Default 0
   maxReplicaCount: 10  #Optional Default 100
@@ -15,7 +15,7 @@ spec:
   - type: kafka
     metadata:
       # Required
-      brokerList: 192.168.1.4:9092
+      brokerList: 192.168.1.4:9092 # Kafka bootstrap server host and port
       consumerGroup: order-shipper  # Make sure that this consumer group name is the same one as the one that is consuming topics
       topic: test
-      lagThreshold: "10"
+      lagThreshold: "10" # Optional. How much the stream is lagging on the current consumer group
