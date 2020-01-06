@@ -9,11 +9,13 @@ spec:
   scaleTargetRef:
     deploymentName: kafka-consumer-deployment
   pollingInterval: 5
+  minReplicaCount: 1   #Optional Default 0
+  maxReplicaCount: 10  #Optional Default 100
   triggers:
   - type: kafka
     metadata:
       # Required
-      brokerList: 192.168.1.11:9092
-      consumerGroup: order-shipper       # Make sure that this consumer group name is the same one as the one that is consuming topics
+      brokerList: 192.168.1.4:9092
+      consumerGroup: order-shipper  # Make sure that this consumer group name is the same one as the one that is consuming topics
       topic: test
       lagThreshold: "10"
