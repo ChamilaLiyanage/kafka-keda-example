@@ -50,6 +50,7 @@ public class ConsumerVerticle extends AbstractVerticle {
             order.setStatus(OrderStatus.SHIPPED);
             order.setProcessedTime(Instant.now());
             //TODO: Add code to simulate a delay.
+            //TODO: Add code to commit since auto-commit is set to "false"
             LOGGER.info("Order processed: id={}, price={}, timeTaken={}", order.getId(), order.getPrice(), Duration.between(order.getCreatedTime(), order.getProcessedTime()).toMillis());
         });
     }
