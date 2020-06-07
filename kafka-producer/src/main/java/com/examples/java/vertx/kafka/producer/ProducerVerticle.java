@@ -61,8 +61,8 @@ public class ProducerVerticle extends AbstractVerticle {
 
             for (Object order : orderList) {
                 JsonObject orderJson = JsonObject.mapFrom(order);
-
-                KafkaProducerRecord<String, JsonObject> record = KafkaProducerRecord.create(Constants.KAFKA_ORDERS_TOPIC, orderJson.getString("id"), orderJson, 0);
+                //Distribute the messages evenly around the partitions.
+                KafkaProducerRecord<String, JsonObject> record = KafkaProducerRecord.create(Constants.KAFKA_ORDERS_TOPIC,orderJson);
                 producer.write(record, done -> {
                     if (done.succeeded()) {
                         RecordMetadata recordMetadata = done.result();
