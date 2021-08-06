@@ -33,7 +33,7 @@ public class ConsumerVerticle extends AbstractVerticle {
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "order-shipper");
         config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
-        config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
+        config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
 
         KafkaConsumer<String, String> consumer = KafkaConsumer.create(vertx, config);
         consumer.subscribe(Constants.KAFKA_ORDERS_TOPIC, ar -> {
@@ -50,7 +50,6 @@ public class ConsumerVerticle extends AbstractVerticle {
             order.setStatus(OrderStatus.SHIPPED);
             order.setProcessedTime(Instant.now());
             //TODO: Add code to simulate a delay.
-            //TODO: Add code to commit since auto-commit is set to "false"
             LOGGER.info("Order processed: id={}, price={}, timeTaken={}", order.getId(), order.getPrice(), Duration.between(order.getCreatedTime(), order.getProcessedTime()).toMillis());
         });
     }
